@@ -599,3 +599,88 @@ render();
 </script>
 </body>
 </html>
+/* =========================================================
+   GOOGLE SITES EMBED BLEND FIX
+========================================================= */
+
+html,
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  background: transparent !important;
+}
+
+body {
+  overflow-x: hidden !important;
+}
+
+.page,
+.embed-shell,
+main {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove the "card inside a card" feeling */
+.hero {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.hero-card {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 520px;
+
+  margin: 0 !important;
+
+  border-radius: 0 !important;
+
+  box-shadow: none !important;
+}
+
+/* Give regular content breathing room,
+   but don't create an outer framed block */
+.section {
+  width: 100% !important;
+  max-width: none !important;
+
+  padding-left: clamp(18px, 4vw, 60px) !important;
+  padding-right: clamp(18px, 4vw, 60px) !important;
+}
+
+/* Let cards use the full available Google Sites width */
+.park-grid {
+  width: 100% !important;
+}
+
+/* Map should also feel like part of the page */
+.map-container {
+  width: 100% !important;
+
+  border-radius: 0 !important;
+
+  box-shadow: none !important;
+
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Mobile */
+@media (max-width: 620px) {
+
+  .hero-card {
+    border-radius: 0 !important;
+    padding: 28px 20px !important;
+  }
+
+  .section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+}

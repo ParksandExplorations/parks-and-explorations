@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Parks & Explorations — National Parks Adventure Tracker v2</title>
+<style>
+:root{
+  --pine:#18382a;
+  --pine-2:#26533b;
+  --sage:#dfe7d9;
+  --cream:#f7f1e6;
+  --paper:#fffdf8;
+  --sun:#e2b45b;
+  --rust:#a95533;
+  --ink:#1f2a24;
+  --muted:#68726c;
+  --line:rgba(31,42,36,.14);
+  --shadow:0 20px 50px rgba(24,56,42,.16);
+  --radius:26px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(226,180,91,.18), transparent 30rem),
+    linear-gradient(180deg,#f9f4ea 0%,#fffdf8 38rem);
+}
+a{color:inherit}
+.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
+
+/* HERO */
+.hero{padding:28px 0 22px}
+.hero-card{
+  min-height:600px;
+  position:relative;
+  overflow:hidden;
+  border-radius:34px;
+  box-shadow:var(--shadow);
+  background:
+    linear-gradient(110deg,rgba(16,43,29,.92) 8%,rgba(16,43,29,.62) 55%,rgba(16,43,29,.18) 100%),
+    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85")
+    center/cover no-repeat;
+  color:white;
+  padding:54px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.hero-card:after{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.26));
+}
+.hero-copy,.hero-bottom{position:relative;z-index:2}
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-weight:850;
+  color:#f4dfa6;
+}
+.kicker:before{content:"";width:34px;height:1px;background:#f4dfa6}
+h1{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(3.4rem,8vw,7.3rem);
+  line-height:.88;
+  letter-spacing:-.04em;
+  max-width:900px;
+  margin:20px 0 18px;
+  font-weight:700;
+}
+.hero-copy p{
+  max-width:690px;
+  font-size:clamp(1.05rem,2vw,1.3rem);
+  color:rgba(255,255,255,.86);
+  line-height:1.6;
+}
+.hero-bottom{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:28px;
+  align-items:end;
+}
+.progress-card{
+  padding:20px 22px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(15,39,27,.48);
+  backdrop-filter:blur(12px);
+  border-radius:20px;
+}
+.progress-row{display:flex;justify-content:space-between;gap:18px;align-items:flex-end}
+.progress-number{font-size:2.8rem;font-weight:900;line-height:1}
+.progress-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.68)}
+.progress-shell{height:11px;background:rgba(255,255,255,.17);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar{height:100%;background:linear-gradient(90deg,#e8bd66,#fff0b2);border-radius:inherit;width:63.49%}
+.hero-stamp{
+  justify-self:end;
+  width:150px;height:150px;
+  border:3px double rgba(255,255,255,.72);
+  border-radius:50%;
+  display:grid;place-items:center;
+  transform:rotate(-9deg);
+  text-align:center;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  font-size:.8rem;
+  background:rgba(18,56,39,.28);
+}
+.hero-stamp strong{display:block;font-family:Georgia,serif;font-size:2.3rem;line-height:1}
+
+/* SECTION TITLES */
+.section{padding:54px 0}
+.section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:24px;
+  margin-bottom:22px;
+}
+.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.16em;font-weight:850;color:var(--rust)}
+.section h2{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2.3rem,5vw,4rem);
+  line-height:.98;
+  margin:6px 0 6px;
+  letter-spacing:-.025em;
+}
+.sub{color:var(--muted);max-width:680px;line-height:1.55;margin:0}
+
+/* MAP */
+.map-card{
+  position:relative;
+  overflow:hidden;
+  min-height:470px;
+  padding:28px;
+  border-radius:30px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.86),rgba(245,239,225,.86)),
+    radial-gradient(circle at 15% 15%,rgba(226,180,91,.16),transparent 18rem);
+  border:1px solid var(--line);
+  box-shadow:0 12px 34px rgba(24,56,42,.08);
+}
+.map-layout{display:grid;grid-template-columns:1.45fr .55fr;gap:20px;min-height:410px}
+.us-map{
+  position:relative;
+  min-height:390px;
+  border-radius:24px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.05)),
+    #dfe7d9;
+  overflow:hidden;
+}
+.us-map svg{width:100%;height:100%;position:absolute;inset:0}
+.us-map path{fill:#b9c9b2;stroke:#fffdf8;stroke-width:4;transition:.2s ease;cursor:pointer}
+.us-map path:hover,.us-map path.active{fill:#e2b45b;transform:translateY(-2px)}
+.map-label{
+  position:absolute;
+  padding:8px 10px;
+  border-radius:999px;
+  background:rgba(255,253,248,.92);
+  border:1px solid rgba(31,42,36,.1);
+  font-size:.72rem;
+  font-weight:850;
+  box-shadow:0 5px 14px rgba(24,56,42,.08);
+  pointer-events:none;
+}
+.l-west{left:9%;top:42%}.l-rockies{left:35%;top:37%}.l-midwest{left:54%;top:29%}
+.l-south{left:53%;top:60%}.l-east{right:9%;top:39%}.l-ak{left:10%;bottom:8%}.l-hi{left:30%;bottom:9%}
+.map-side{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:12px;
+  padding:8px;
+}
+.map-side button{
+  width:100%;
+  text-align:left;
+  border:1px solid var(--line);
+  background:var(--paper);
+  padding:15px 16px;
+  border-radius:16px;
+  cursor:pointer;
+  font:inherit;
+  font-weight:800;
+}
+.map-side button:hover,.map-side button.active{background:var(--pine);color:white;border-color:var(--pine)}
+.map-side small{display:block;font-weight:500;opacity:.7;margin-top:3px}
+
+/* FILTERS */
+.toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  margin:18px 0 24px;
+}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter-btn{
+  border:1px solid var(--line);
+  background:white;
+  color:var(--ink);
+  padding:11px 16px;
+  border-radius:999px;
+  font-weight:800;
+  cursor:pointer;
+}
+.filter-btn.active{background:var(--pine);color:white;border-color:var(--pine)}
+.search{
+  min-width:min(330px,100%);
+  padding:12px 18px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:white;
+  font:inherit;
+  outline:none;
+}
+.search:focus{border-color:var(--pine-2);box-shadow:0 0 0 4px rgba(38,83,59,.08)}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.park-card{
+  position:relative;
+  min-height:350px;
+  border-radius:26px;
+  overflow:hidden;
+  box-shadow:0 10px 28px rgba(24,56,42,.1);
+  isolation:isolate;
+  background:#355845;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.park-card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.park-photo{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform .45s ease;
+}
+.park-card:hover .park-photo{transform:scale(1.045)}
+.park-card:after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(12,30,21,.08),rgba(12,30,21,.12) 28%,rgba(12,30,21,.92) 88%);
+}
+.park-content{
+  height:100%;
+  min-height:350px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  color:white;
+  padding:20px;
+  position:relative;
+}
+.card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.status{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 10px;
+  border-radius:999px;
+  background:rgba(18,45,31,.7);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);
+  font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
+}
+.status .dot{width:8px;height:8px;border-radius:50%;background:#f0c467}
+.bucket .status .dot{background:#fff}
+.passport{
+  width:78px;height:78px;border-radius:50%;
+  display:grid;place-items:center;text-align:center;
+  border:2px dashed rgba(255,255,255,.8);
+  transform:rotate(10deg);
+  font-family:Georgia,serif;
+  text-transform:uppercase;
+  font-size:.61rem;
+  line-height:1.05;
+  background:rgba(169,85,51,.62);
+}
+.bucket .passport{display:none}
+.state{font-size:.72rem;text-transform:uppercase;letter-spacing:.13em;opacity:.76;font-weight:850}
+.park-name{font-family:Georgia,"Times New Roman",serif;font-size:2rem;line-height:1;margin:7px 0 14px}
+.card-bottom a,.card-bottom span{
+  color:white;text-decoration:none;font-weight:850;font-size:.92rem
+}
+.card-bottom a:hover{text-decoration:underline}
+.bucket{filter:saturate(.7)}
+.bucket:after{background:linear-gradient(180deg,rgba(12,30,21,.22),rgba(12,30,21,.35) 30%,rgba(12,30,21,.95) 90%)}
+
+/* FEATURE STRIP */
+.feature-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px
+}
+.feature{
+  padding:18px;border-radius:20px;background:var(--paper);border:1px solid var(--line)
+}
+.feature .icon{font-size:1.5rem}
+.feature strong{display:block;margin-top:8px}
+.feature span{font-size:.86rem;color:var(--muted)}
+
+/* FOOTER */
+footer{padding:34px 0 60px;text-align:center;color:var(--muted);font-size:.9rem}
+.empty{grid-column:1/-1;padding:60px 20px;text-align:center;color:var(--muted)}
+
+@media(max-width:900px){
+  .hero-bottom,.map-layout{grid-template-columns:1fr}
+  .hero-stamp{justify-self:start}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .feature-strip{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:590px){
+  .hero-card{padding:28px;min-height:540px}
+  .hero-stamp{width:120px;height:120px}
+  .grid{grid-template-columns:1fr}
+  .feature-strip{grid-template-columns:1fr}
+  .section{padding:38px 0}
+  .toolbar{align-items:stretch}
+  .search{width:100%}
+  .map-card{padding:14px}
+}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-card">
+      <div class="hero-copy">
+        <div class="kicker">Parks & Explorations</div>
+        <h1>Collect memories,<br>not just miles.</h1>
+        <p>Our ongoing mission to experience all 63 U.S. National Parks — one trail, overlook, sunrise, wildlife sighting, and ridiculous road-trip snack at a time.</p>
+      </div>
+
+      <div class="hero-bottom">
+        <div class="progress-card">
+          <div class="progress-row">
+            <div>
+              <div class="progress-number"><span id="visitedCount">40</span> / <span id="totalCount">63</span></div>
+              <div class="progress-label">National parks explored</div>
+            </div>
+            <div style="text-align:right">
+              <div class="progress-number" id="percent">63%</div>
+              <div class="progress-label">Mission complete</div>
+            </div>
+          </div>
+          <div class="progress-shell"><div class="progress-bar" id="progress"></div></div>
+        </div>
+        <div class="hero-stamp">
+          <div><strong id="stillCalling">23</strong>parks<br>still calling</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="map">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Explore by region</div>
+        <h2>Where should we wander?</h2>
+        <p class="sub">Tap a region to instantly filter the park collection below.</p>
+      </div>
+    </div>
+
+    <div class="map-card">
+      <div class="map-layout">
+        <div class="us-map" aria-label="Stylized United States region map">
+          <svg viewBox="0 0 900 520" role="img" aria-label="Stylized map of U.S. park regions">
+            <path id="map-west" data-region="West" d="M90,105 L255,85 L300,125 L285,210 L320,260 L280,345 L180,370 L120,300 L80,205 Z"/>
+            <path id="map-rockies" data-region="Rockies" d="M260,88 L430,92 L470,155 L455,295 L335,320 L285,210 L300,125 Z"/>
+            <path id="map-midwest" data-region="Midwest" d="M430,95 L615,112 L665,185 L610,270 L455,295 L470,155 Z"/>
+            <path id="map-south" data-region="South" d="M335,320 L455,295 L610,270 L690,330 L655,420 L500,440 L390,405 Z"/>
+            <path id="map-east" data-region="East" d="M615,112 L755,145 L810,235 L760,315 L690,330 L610,270 L665,185 Z"/>
+            <path id="map-alaska" data-region="Alaska" d="M75,405 L210,400 L235,455 L145,485 L65,455 Z"/>
+            <path id="map-hawaii" data-region="Hawaii" d="M270,440 L292,446 L303,460 L287,470 L263,460 Z"/>
+          </svg>
+          <div class="map-label l-west">WEST</div>
+          <div class="map-label l-rockies">ROCKIES</div>
+          <div class="map-label l-midwest">MIDWEST</div>
+          <div class="map-label l-south">SOUTH</div>
+          <div class="map-label l-east">EAST</div>
+          <div class="map-label l-ak">ALASKA</div>
+          <div class="map-label l-hi">HAWAII</div>
+        </div>
+
+        <div class="map-side">
+          <button data-region-button="all" class="active">All parks<small>Show the whole adventure</small></button>
+          <button data-region-button="West">West Coast<small>California, Oregon & Washington</small></button>
+          <button data-region-button="Rockies">Rockies & Southwest<small>Utah, Arizona, Colorado & more</small></button>
+          <button data-region-button="South">South<small>Texas, Florida, Appalachia & more</small></button>
+          <button data-region-button="East">East & Midwest<small>Atlantic, Great Lakes & central parks</small></button>
+          <button data-region-button="Alaska">Alaska<small>The wild big ones</small></button>
+          <button data-region-button="Hawaii">Hawaii & Pacific<small>Volcanoes, islands & ocean parks</small></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="parks">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">The park passport</div>
+        <h2>63 parks. One collection.</h2>
+        <p class="sub">Explored parks get a passport stamp. The rest stay on the adventure list until it’s their turn.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All 63</button>
+        <button class="filter-btn" data-filter="visited">✓ Explored</button>
+        <button class="filter-btn" data-filter="bucket">🥾 Bucket List</button>
+      </div>
+      <input class="search" id="search" placeholder="Search park or state…" />
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="feature-strip">
+      <div class="feature"><div class="icon">🥾</div><strong>Trail stories</strong><span>Link each park card to your favorite hikes and trip notes.</span></div>
+      <div class="feature"><div class="icon">📷</div><strong>Your photos</strong><span>Swap each sample image for your own favorite shot from the park.</span></div>
+      <div class="feature"><div class="icon">🗺️</div><strong>Region explorer</strong><span>Use the map above to jump around the country.</span></div>
+      <div class="feature"><div class="icon">🏕️</div><strong>Always growing</strong><span>Flip one word from false to true after every new park.</span></div>
+    </div>
+  </section>
+</main>
+
+<footer>Keep exploring 🌲 • Parks & Explorations</footer>
+
+<script>
+/*
+  ============================================================
+  EDIT THIS SECTION ONLY
+  ============================================================
+  visited: true or false
+  url: link to your individual park page
+  image: replace the sample image URL with YOUR photo URL
+  region: West | Rockies | Midwest | South | East | Alaska | Hawaii
+*/
+const parks = [
+{name:"Acadia",state:"Maine",region:"East",visited:true,url:"https://www.parksandexplorations.com/national-parks/acadia",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Arches",state:"Utah",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/arches",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Badlands",state:"South Dakota",region:"Midwest",visited:true,url:"https://www.parksandexplorations.com/national-parks/badlands",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Big Bend",state:"Texas",region:"South",visited:true,url:"https://www.parksandexplorations.com/national-parks/big-bend",image:"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1000&q=80"},
+{name:"Biscayne",state:"Florida",region:"South",visited:true,url:"https://www.parksandexplorations.com/national-parks/biscayne",image:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Black Canyon of the Gunnison",state:"Colorado",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/black-canyon-of-the-gunnison",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Bryce Canyon",state:"Utah",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/bryce-canyon",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Canyonlands",state:"Utah",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/canyonlands",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Capitol Reef",state:"Utah",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/capitol-reef",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Carlsbad Caverns",state:"New Mexico",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/carlsbad-caverns",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Channel Islands",state:"California",region:"West",visited:false,url:"",image:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Congaree",state:"South Carolina",region:"South",visited:true,url:"https://www.parksandexplorations.com/national-parks/congaree",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Crater Lake",state:"Oregon",region:"West",visited:true,url:"https://www.parksandexplorations.com/national-parks/crater-lake",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Cuyahoga Valley",state:"Ohio",region:"Midwest",visited:false,url:"",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Death Valley",state:"California / Nevada",region:"West",visited:false,url:"",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Denali",state:"Alaska",region:"Alaska",visited:true,url:"https://www.parksandexplorations.com/national-parks/denali",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Dry Tortugas",state:"Florida",region:"South",visited:true,url:"https://www.parksandexplorations.com/national-parks/dry-tortugas",image:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Everglades",state:"Florida",region:"South",visited:true,url:"https://www.parksandexplorations.com/national-parks/everglades",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Gates of the Arctic",state:"Alaska",region:"Alaska",visited:false,url:"",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Gateway Arch",state:"Missouri",region:"Midwest",visited:true,url:"https://www.parksandexplorations.com/national-parks/gateway-arch",image:"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1000&q=80"},
+{name:"Glacier Bay",state:"Alaska",region:"Alaska",visited:false,url:"",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Glacier",state:"Montana",region:"Rockies",visited:false,url:"",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Grand Canyon",state:"Arizona",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/grand-canyon",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Grand Teton",state:"Wyoming",region:"Rockies",visited:false,url:"",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Great Basin",state:"Nevada",region:"West",visited:false,url:"",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Great Sand Dunes",state:"Colorado",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/great-sand-dunes",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Great Smoky Mountains",state:"Tennessee / North Carolina",region:"South",visited:true,url:"https://www.parksandexplorations.com/national-parks/smoky-mountains",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Guadalupe Mountains",state:"Texas",region:"South",visited:true,url:"https://www.parksandexplorations.com/national-parks/guadalupe-mountains",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Haleakalā",state:"Hawaii",region:"Hawaii",visited:false,url:"",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Hawaiʻi Volcanoes",state:"Hawaii",region:"Hawaii",visited:false,url:"",image:"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1000&q=80"},
+{name:"Hot Springs",state:"Arkansas",region:"South",visited:false,url:"",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Indiana Dunes",state:"Indiana",region:"Midwest",visited:false,url:"",image:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Isle Royale",state:"Michigan",region:"Midwest",visited:false,url:"",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Joshua Tree",state:"California",region:"West",visited:true,url:"https://www.parksandexplorations.com/national-parks/joshua-tree",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Katmai",state:"Alaska",region:"Alaska",visited:false,url:"",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Kenai Fjords",state:"Alaska",region:"Alaska",visited:true,url:"https://www.parksandexplorations.com/national-parks/kenai-fjords",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Kings Canyon",state:"California",region:"West",visited:true,url:"https://www.parksandexplorations.com/national-parks/kings-canyon",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Kobuk Valley",state:"Alaska",region:"Alaska",visited:false,url:"",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Lake Clark",state:"Alaska",region:"Alaska",visited:false,url:"",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Lassen Volcanic",state:"California",region:"West",visited:true,url:"https://www.parksandexplorations.com/national-parks/lassen-volcanic",image:"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1000&q=80"},
+{name:"Mammoth Cave",state:"Kentucky",region:"South",visited:true,url:"https://www.parksandexplorations.com/national-parks/mammoth-cave",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Mesa Verde",state:"Colorado",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/mesa-verde",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Mount Rainier",state:"Washington",region:"West",visited:false,url:"",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"National Park of American Samoa",state:"American Samoa",region:"Hawaii",visited:false,url:"",image:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80"},
+{name:"New River Gorge",state:"West Virginia",region:"East",visited:true,url:"https://www.parksandexplorations.com/national-parks/new-river-gorge",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"North Cascades",state:"Washington",region:"West",visited:false,url:"",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Olympic",state:"Washington",region:"West",visited:false,url:"",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Petrified Forest",state:"Arizona",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/petrified-forest",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Pinnacles",state:"California",region:"West",visited:true,url:"https://www.parksandexplorations.com/national-parks/pinnacles",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Redwood",state:"California",region:"West",visited:true,url:"https://www.parksandexplorations.com/national-parks/redwood",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Rocky Mountain",state:"Colorado",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/rocky-mountain",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Saguaro",state:"Arizona",region:"Rockies",visited:false,url:"",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Sequoia",state:"California",region:"West",visited:true,url:"https://www.parksandexplorations.com/national-parks/sequoia",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Shenandoah",state:"Virginia",region:"East",visited:true,url:"https://www.parksandexplorations.com/national-parks/shenandoah",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Theodore Roosevelt",state:"North Dakota",region:"Midwest",visited:true,url:"https://www.parksandexplorations.com/national-parks/theodore-roosevelt",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Virgin Islands",state:"U.S. Virgin Islands",region:"South",visited:false,url:"",image:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Voyageurs",state:"Minnesota",region:"Midwest",visited:false,url:"",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"White Sands",state:"New Mexico",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/white-sands",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"},
+{name:"Wind Cave",state:"South Dakota",region:"Midwest",visited:false,url:"",image:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=80"},
+{name:"Wrangell–St. Elias",state:"Alaska",region:"Alaska",visited:true,url:"https://www.parksandexplorations.com/national-parks/wrangell-st-elias",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Yellowstone",state:"Wyoming / Montana / Idaho",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/yellowstone",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80"},
+{name:"Yosemite",state:"California",region:"West",visited:true,url:"https://www.parksandexplorations.com/national-parks/yosemite",image:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"},
+{name:"Zion",state:"Utah",region:"Rockies",visited:true,url:"https://www.parksandexplorations.com/national-parks/zion",image:"https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1000&q=80"}
+];
+
+/*
+  Your published site currently says 40 / 63.
+  This keeps the headline accurate while you finish checking each visited flag below.
+  Once your true flags total 40, set FORCE_PUBLISHED_COUNT to null.
+*/
+const FORCE_PUBLISHED_COUNT = 40;
+
+let currentFilter = "all";
+let currentRegion = "all";
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+
+function updateStats(){
+  const actualVisited = parks.filter(p=>p.visited).length;
+  const visited = FORCE_PUBLISHED_COUNT ?? actualVisited;
+  const total = parks.length;
+  document.getElementById("visitedCount").textContent = visited;
+  document.getElementById("totalCount").textContent = total;
+  document.getElementById("stillCalling").textContent = total - visited;
+  document.getElementById("percent").textContent = Math.round(visited/total*100) + "%";
+  document.getElementById("progress").style.width = (visited/total*100) + "%";
+}
+
+function render(){
+  const q = search.value.trim().toLowerCase();
+  const filtered = parks.filter(p=>{
+    const statusOK =
+      currentFilter === "all" ||
+      (currentFilter === "visited" && p.visited) ||
+      (currentFilter === "bucket" && !p.visited);
+
+    const regionOK =
+      currentRegion === "all" ||
+      p.region === currentRegion ||
+      (currentRegion === "East" && p.region === "Midwest");
+
+    const searchOK = (p.name + " " + p.state + " " + p.region).toLowerCase().includes(q);
+    return statusOK && regionOK && searchOK;
+  });
+
+  grid.innerHTML = filtered.length ? filtered.map(p=>`
+    <article class="park-card ${p.visited ? "" : "bucket"}">
+      <div class="park-photo" style="background-image:url('${p.image}')"></div>
+      <div class="park-content">
+        <div class="card-top">
+          <div class="status"><span class="dot"></span>${p.visited ? "Explored" : "Adventure awaits"}</div>
+          <div class="passport">${p.visited ? "Parks &<br>Explorations<br>✓" : ""}</div>
+        </div>
+        <div class="card-bottom">
+          <div class="state">${p.state}</div>
+          <div class="park-name">${p.name}</div>
+          ${p.url
+            ? `<a href="${p.url}" target="_top">Open the adventure →</a>`
+            : `<span>Still on the list →</span>`}
+        </div>
+      </div>
+    </article>
+  `).join("") : `<div class="empty">No parks match those filters. Try another region or search.</div>`;
+}
+
+function setRegion(region){
+  currentRegion = region;
+  document.querySelectorAll("[data-region-button]").forEach(b=>b.classList.toggle("active", b.dataset.regionButton===region));
+  document.querySelectorAll(".us-map path").forEach(p=>p.classList.toggle("active", p.dataset.region===region));
+  render();
+  document.getElementById("parks").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+document.querySelectorAll("[data-filter]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("[data-filter]").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+document.querySelectorAll("[data-region-button]").forEach(btn=>{
+  btn.addEventListener("click",()=>setRegion(btn.dataset.regionButton));
+});
+
+document.querySelectorAll(".us-map path").forEach(path=>{
+  path.addEventListener("click",()=>setRegion(path.dataset.region));
+});
+
+search.addEventListener("input",render);
+updateStats();
+render();
+</script>
+</body>
+</html>
